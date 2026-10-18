@@ -1,6 +1,6 @@
 # Версии и обновления
 
-Источник правды — SemVer в четырёх местах **одним значением** (сейчас `1.1.0`).
+Источник правды — SemVer в четырёх местах **одним значением** (сейчас `1.2.0`).
 
 | Место | Что править |
 |---|---|
@@ -11,7 +11,7 @@
 
 `update.xml`:
 
-- `<element>mod_bsjshop_filter</element>` `<type>module</type>` `<client>0</client>`
+- `<element>mod_bsjshop_filter</element>` `<type>module</type>` `<client>site</client>` (не `0`: иначе Joomla 6 не матчит site-модуль)
 - `<targetplatform name="joomla" version="^[4-9]" />`
 - downloadurl: `.../releases/download/vX.Y.Z/mod_bsjshop_filter_vX.Y.Z.zip`
 - infourl: страница релизов GitHub

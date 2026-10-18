@@ -20,6 +20,7 @@
         var moreBtn = qs(root, '[data-bsjf-more]');
         var emptyEl = qs(root, '[data-bsjf-empty]');
         var catInput = qs(root, '[data-bsjf-category]');
+        var filterToggle = qs(root, '[data-bsjf-toggle]');
 
         if (!form || !grid) {
             return;
@@ -74,6 +75,19 @@
                 return;
             }
             el.classList.toggle('is-hidden', !show);
+        }
+
+        function setFilterOpen(open) {
+            root.classList.toggle('is-filter-open', open);
+            if (filterToggle) {
+                filterToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
+        }
+
+        function closeMobileFilter() {
+            if (window.matchMedia('(max-width: 767px)').matches) {
+                setFilterOpen(false);
+            }
         }
 
         function request(offset, append) {
@@ -138,8 +152,15 @@
             });
         });
 
+        if (filterToggle) {
+            filterToggle.addEventListener('click', function () {
+                setFilterOpen(!root.classList.contains('is-filter-open'));
+            });
+        }
+
         form.addEventListener('submit', function (event) {
             event.preventDefault();
+            closeMobileFilter();
             request(0, false);
         });
 
@@ -169,6 +190,7 @@
                 qsa(root, '[data-bsjf-cat]').forEach(function (el) {
                     el.classList.toggle('is-active', el.getAttribute('data-bsjf-cat') === '0');
                 });
+                closeMobileFilter();
                 request(0, false);
             });
         }

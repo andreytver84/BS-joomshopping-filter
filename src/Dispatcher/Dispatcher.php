@@ -42,6 +42,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $data['filters'] = [];
             $data['items'] = [];
             $data['hasMore'] = false;
+            $data['currencyCode'] = '';
 
             return $data;
         }

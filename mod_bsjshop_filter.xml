@@ -7,7 +7,7 @@
     <creationDate>2026</creationDate>
     <copyright>Copyright (C) 2026 Andrey Uvikov</copyright>
     <license>GNU General Public License version 2 or later</license>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <description><![CDATA[
         <div style="background:#f4f7f9;padding:20px;border-left:5px solid #004E82;border-radius:4px;font-family:sans-serif;margin-bottom:20px;">
             <h2 style="margin-top:0;color:#004E82;">BS JoomShopping Filter</h2>
@@ -79,6 +79,27 @@
 
                 <field name="limit" type="number" label="MOD_BSJSHOP_FILTER_FIELD_LIMIT_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_LIMIT_DESC" default="6" min="1" max="48" step="1" />
 
+                <field name="cols_lg" type="list" label="MOD_BSJSHOP_FILTER_FIELD_COLS_LG_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_COLS_LG_DESC" default="3">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </field>
+
+                <field name="cols_md" type="list" label="MOD_BSJSHOP_FILTER_FIELD_COLS_MD_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_COLS_MD_DESC" default="2">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </field>
+
+                <field name="cols_sm" type="list" label="MOD_BSJSHOP_FILTER_FIELD_COLS_SM_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_COLS_SM_DESC" default="1">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </field>
+
                 <field name="show_more" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_MORE_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_SHOW_MORE_DESC" default="1">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
@@ -99,8 +120,6 @@
                     <option value="ASC">MOD_BSJSHOP_FILTER_OPTION_ASC</option>
                     <option value="DESC">MOD_BSJSHOP_FILTER_OPTION_DESC</option>
                 </field>
-
-                <field name="currency_suffix" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CURRENCY_LABEL" default="₽" />
 
                 <field name="price_decimals" type="number" label="MOD_BSJSHOP_FILTER_FIELD_DECIMALS_LABEL" default="0" min="0" max="2" step="1" />
             </fieldset>

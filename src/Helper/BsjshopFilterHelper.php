@@ -26,7 +26,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 
-    public const VERSION = '1.1.0';
+    public const VERSION = '1.2.0';
 
     public function isShopReady(): bool
     {
@@ -50,8 +50,9 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             'categories' => $categories,
             'bounds'     => $bounds,
             'filters'    => $filters,
-            'items'      => $result['items'],
-            'hasMore'    => $result['hasMore'],
+            'items'        => $result['items'],
+            'hasMore'      => $result['hasMore'],
+            'currencyCode' => $this->getCurrencyCode(),
         ];
     }
 
@@ -688,9 +689,80 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         return $live . rawurlencode($file);
     }
 
+    public function getCurrencyCode(): string
+    {
+        static $code = null;
+
+        if ($code !== null) {
+            return $code;
+        }
+
+        $code = '';
+
+        if (!$this->tableExists('#__jshopping_currencies') || !$this->columnExists('#__jshopping_currencies', 'currency_id')) {
+            return $code;
+        }
+
+        $this->bootstrapShop();
+        $mainId = 0;
+
+        if (class_exists('JSFactory')) {
+            $cfg = \JSFactory::getConfig();
+
+            if (is_object($cfg) && isset($cfg->mainCurrency)) {
+                $mainId = (int) $cfg->mainCurrency;
+            }
+        }
+
+        $columns = [];
+
+        foreach (['currency_code', 'currency_code_iso'] as $column) {
+            if ($this->columnExists('#__jshopping_currencies', $column)) {
+                $columns[] = $column;
+            }
+        }
+
+        if (!$columns) {
+            return $code;
+        }
+
+        $db = $this->db();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName($columns))
+            ->from($db->quoteName('#__jshopping_currencies'));
+
+        if ($mainId > 0) {
+            $query->where($db->quoteName('currency_id') . ' = :cid')
+                ->bind(':cid', $mainId, ParameterType::INTEGER);
+        } elseif ($this->columnExists('#__jshopping_currencies', 'currency_publish')) {
+            $query->where($db->quoteName('currency_publish') . ' = 1');
+
+            if ($this->columnExists('#__jshopping_currencies', 'currency_ordering')) {
+                $query->order($db->quoteName('currency_ordering') . ' ASC');
+            }
+        }
+
+        $db->setQuery($query, 0, 1);
+        $row = $db->loadObject();
+
+        if (!$row) {
+            return $code;
+        }
+
+        $value = trim((string) ($row->currency_code ?? ''));
+
+        if ($value === '') {
+            $value = trim((string) ($row->currency_code_iso ?? ''));
+        }
+
+        $code = $value;
+
+        return $code;
+    }
+
     private function formatPrice(float $price, Registry $params, bool $from): string
     {
-        $suffix = trim((string) $params->get('currency_suffix', '₽'));
+        $suffix = $this->getCurrencyCode();
         $html = ($from ? Text::_('MOD_BSJSHOP_FILTER_PRICE_FROM') . ' ' : '')
             . $this->formatNumber($price, (int) $params->get('price_decimals', 0));
 

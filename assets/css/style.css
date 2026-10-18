@@ -8,11 +8,16 @@
     --bsjf-panel: #f3eee6;
     --bsjf-line: #e4ddd2;
     --bsjf-white: #fff;
-    --bsjf-radius: 14px;
+    --bsjf-radius: 16px;
     --bsjf-radius-sm: 10px;
+    --bsjf-gap: 1.1rem;
+    --bsjf-cols: 3;
+    --bsjf-cols-md: 2;
+    --bsjf-cols-sm: 1;
     box-sizing: border-box;
+    width: 100%;
+    max-width: none;
     color: var(--bsjf-text);
-    max-width: 1180px;
 }
 
 .bsjf *,
@@ -54,18 +59,25 @@
     color: var(--bsjf-white);
 }
 
+.bsjf-filter-toggle {
+    display: none;
+}
+
 .bsjf-filters {
-    display: grid;
-    gap: 0.8rem;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
-    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.85rem 1rem;
+    width: 100%;
     margin-bottom: 1.4rem;
 }
 
-.bsjf-range {
+.bsjf .bsjf-range {
+    flex: 1 1 16rem;
+    min-width: 0;
     background: var(--bsjf-panel);
     border-radius: var(--bsjf-radius);
-    padding: 0.7rem 0.9rem 0.85rem;
+    padding: 0.75rem 0.95rem 0.9rem;
 }
 
 .bsjf-range-label {
@@ -109,6 +121,7 @@
     display: flex;
     align-items: center;
     gap: 0.85rem;
+    margin-left: auto;
     padding-bottom: 0.15rem;
 }
 
@@ -142,10 +155,18 @@
 }
 
 .bsjf-grid {
-    display: grid;
-    gap: 1.4rem 1.1rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 1.5rem var(--bsjf-gap);
+    width: 100%;
     position: relative;
+}
+
+.bsjf-card {
+    min-width: 0;
+    flex: 0 0 calc((100% - (var(--bsjf-cols-sm) - 1) * var(--bsjf-gap)) / var(--bsjf-cols-sm));
+    max-width: calc((100% - (var(--bsjf-cols-sm) - 1) * var(--bsjf-gap)) / var(--bsjf-cols-sm));
 }
 
 .bsjf.is-loading .bsjf-grid {
@@ -156,7 +177,7 @@
 .bsjf-card-media {
     display: block;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 8px;
     aspect-ratio: 16 / 11;
     background: #e8e1d4;
 }
@@ -266,23 +287,88 @@
     display: none !important;
 }
 
-@media (max-width: 960px) {
-    .bsjf-filters {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .bsjf-actions {
-        grid-column: 1 / -1;
-    }
-
-    .bsjf-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (min-width: 768px) {
+    .bsjf-card {
+        flex-basis: calc((100% - (var(--bsjf-cols-md) - 1) * var(--bsjf-gap)) / var(--bsjf-cols-md));
+        max-width: calc((100% - (var(--bsjf-cols-md) - 1) * var(--bsjf-gap)) / var(--bsjf-cols-md));
     }
 }
 
-@media (max-width: 640px) {
-    .bsjf-filters,
-    .bsjf-grid {
-        grid-template-columns: 1fr;
+@media (min-width: 992px) {
+    .bsjf-card {
+        flex-basis: calc((100% - (var(--bsjf-cols) - 1) * var(--bsjf-gap)) / var(--bsjf-cols));
+        max-width: calc((100% - (var(--bsjf-cols) - 1) * var(--bsjf-gap)) / var(--bsjf-cols));
+    }
+}
+
+@media (max-width: 767px) {
+    .bsjf-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        margin-right: -0.25rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.15rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .bsjf-tab {
+        flex: 0 0 auto;
+    }
+
+    .bsjf-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin: 0 0 0.75rem;
+        padding: 0.8rem 1rem;
+        border: 0;
+        border-radius: 12px;
+        background: var(--bsjf-panel);
+        color: var(--bsjf-title);
+        font: inherit;
+        font-weight: 650;
+        cursor: pointer;
+    }
+
+    .bsjf-filter-toggle::after {
+        content: "";
+        width: 0.45rem;
+        height: 0.45rem;
+        margin-right: 0.2rem;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        transform: rotate(45deg);
+    }
+
+    .bsjf.is-filter-open .bsjf-filter-toggle::after {
+        transform: rotate(225deg);
+        margin-top: 0.3rem;
+    }
+
+    .bsjf-form .bsjf-filters {
+        display: none;
+        margin-bottom: 1rem;
+    }
+
+    .bsjf.is-filter-open .bsjf-filters {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bsjf .bsjf-range,
+    .bsjf-actions {
+        flex: 1 1 auto;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .bsjf-actions {
+        justify-content: space-between;
+    }
+
+    .bsjf-input {
+        font-size: 16px;
     }
 }

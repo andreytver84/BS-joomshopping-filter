@@ -45,6 +45,12 @@ $areaTo = $filters['area_to'] ?? $areaMax;
 $activeCat = (int) ($filters['category_id'] ?? 0);
 $limit = (int) ($filters['limit'] ?? $params->get('limit', 6));
 $areaUnit = trim((string) $params->get('extra_field_area_unit', 'м²'));
+$currencyCode = trim((string) ($currencyCode ?? ''));
+$priceLabel = Text::_('MOD_BSJSHOP_FILTER_PRICE_LABEL');
+
+if ($currencyCode !== '') {
+    $priceLabel .= ', ' . $currencyCode;
+}
 $showRanges = $showPrice || $showArea;
 $showMore = (int) $params->get('show_more', 1) === 1;
 $moreText = trim((string) $params->get('more_text', ''));
@@ -55,6 +61,9 @@ if ($moreText === '' || $moreText === 'MOD_BSJSHOP_FILTER_MORE') {
 
 $moreClass = preg_replace('/[^A-Za-z0-9 _-]/', '', (string) $params->get('more_class', ''));
 $moreClass = trim(preg_replace('/\s+/', ' ', (string) $moreClass));
+$colsLg = max(1, min(6, (int) $params->get('cols_lg', 3)));
+$colsMd = max(1, min(6, (int) $params->get('cols_md', 2)));
+$colsSm = max(1, min(6, (int) $params->get('cols_sm', 1)));
 ?>
 <div
     class="bsjf<?php echo $sfx !== '' ? ' ' . $e($sfx) : ''; ?>"
@@ -68,6 +77,7 @@ $moreClass = trim(preg_replace('/\s+/', ' ', (string) $moreClass));
     data-price-max="<?php echo $e((string) $priceMax); ?>"
     data-area-min="<?php echo $e((string) $areaMin); ?>"
     data-area-max="<?php echo $e((string) $areaMax); ?>"
+    style="--bsjf-cols: <?php echo $colsLg; ?>; --bsjf-cols-md: <?php echo $colsMd; ?>; --bsjf-cols-sm: <?php echo $colsSm; ?>;"
 >
     <?php if ($title !== '') : ?>
         <h2 class="bsjf-title"><?php echo $e($title); ?></h2>
@@ -98,13 +108,17 @@ $moreClass = trim(preg_replace('/\s+/', ' ', (string) $moreClass));
         <form class="bsjf-form" data-bsjf-form action="" method="get">
             <input type="hidden" name="<?php echo 'bsjf_' . $moduleId . '_cat'; ?>" value="<?php echo $activeCat; ?>" data-bsjf-category>
             <?php if ($showRanges) : ?>
-            <div class="bsjf-filters">
+            <button type="button" class="bsjf-filter-toggle" data-bsjf-toggle aria-expanded="false">
+                <?php echo $e(Text::_('MOD_BSJSHOP_FILTER_FILTER_TOGGLE')); ?>
+            </button>
+            <div class="bsjf-filters" data-bsjf-panel>
                 <?php if ($showPrice) : ?>
                     <div class="bsjf-range">
-                        <div class="bsjf-range-label"><?php echo $e(Text::_('MOD_BSJSHOP_FILTER_PRICE_LABEL')); ?></div>
+                        <div class="bsjf-range-label"><?php echo $e($priceLabel); ?></div>
                         <div class="bsjf-range-row">
                             <input
                                 type="number"
+                                inputmode="numeric"
                                 name="<?php echo 'bsjf_' . $moduleId . '_price_from'; ?>"
                                 data-bsjf-field="price_from"
                                 class="bsjf-input"
@@ -115,6 +129,7 @@ $moreClass = trim(preg_replace('/\s+/', ' ', (string) $moreClass));
                             >
                             <input
                                 type="number"
+                                inputmode="numeric"
                                 name="<?php echo 'bsjf_' . $moduleId . '_price_to'; ?>"
                                 data-bsjf-field="price_to"
                                 class="bsjf-input"
@@ -135,6 +150,7 @@ $moreClass = trim(preg_replace('/\s+/', ' ', (string) $moreClass));
                         <div class="bsjf-range-row">
                             <input
                                 type="number"
+                                inputmode="decimal"
                                 name="<?php echo 'bsjf_' . $moduleId . '_area_from'; ?>"
                                 data-bsjf-field="area_from"
                                 class="bsjf-input"
@@ -145,6 +161,7 @@ $moreClass = trim(preg_replace('/\s+/', ' ', (string) $moreClass));
                             >
                             <input
                                 type="number"
+                                inputmode="decimal"
                                 name="<?php echo 'bsjf_' . $moduleId . '_area_to'; ?>"
                                 data-bsjf-field="area_to"
                                 class="bsjf-input"

@@ -14,7 +14,7 @@ use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-$assetVersion = '1.1.0';
+$assetVersion = '1.2.0';
 $app = Factory::getApplication();
 $doc = $app->getDocument();
 $base = Uri::root(true);
@@ -30,6 +30,7 @@ $bounds = [];
 $filters = [];
 $items = [];
 $hasMore = false;
+$currencyCode = '';
 
 if ($shopReady) {
     $catalog = $helper->getCatalogData($params, (int) $module->id);
@@ -38,6 +39,7 @@ if ($shopReady) {
     $filters = $catalog['filters'];
     $items = $catalog['items'];
     $hasMore = $catalog['hasMore'];
+    $currencyCode = $catalog['currencyCode'];
 }
 
 $doc->addStyleSheet($base . '/modules/mod_bsjshop_filter/assets/css/style.css', ['version' => $assetVersion]);
