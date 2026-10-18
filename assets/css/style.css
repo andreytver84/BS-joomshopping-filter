@@ -4,7 +4,7 @@
     --bsjf-muted: #8a8378;
     --bsjf-accent: #c45c32;
     --bsjf-tab: #192519;
-    --bsjf-tab-bg: #fff;
+    --bsjf-tab-bg: transparent;
     --bsjf-price: #192519;
     --bsjf-panel: #E8E3D6;
     --bsjf-line: #e4ddd2;
@@ -38,7 +38,7 @@
 .bsjf-tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 10px;
     margin-bottom: 1rem;
 }
 
@@ -48,8 +48,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1.5px solid var(--bsjf-tab);
-    border-radius: 999px;
+    min-height: 40px;
+    border: 1px solid var(--bsjf-tab);
+    border-radius: 8px;
     background: var(--bsjf-tab-bg);
     box-shadow: none;
     color: var(--bsjf-tab);
@@ -58,7 +59,7 @@
     font-size: 0.92rem;
     font-weight: 400;
     line-height: 1.15;
-    padding: 0.48rem 1.05rem;
+    padding: 10px 24px;
     white-space: nowrap;
 }
 
