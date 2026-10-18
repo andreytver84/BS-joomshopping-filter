@@ -1,0 +1,22 @@
+---
+description: PHP-конвенции Joomla 5/6 для модуля, хелперов и tmpl.
+globs: "**/*.php"
+alwaysApply: false
+---
+
+# PHP Joomla 5/6
+
+```php
+defined('_JEXEC') or die;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+```
+
+- Запрещены `JFactory`, `JText`, `JHtml`, `JRequest`, `DS`, `jimport`.
+- Токены: `Text::_('MOD_BSJSHOP_FILTER_…')`, не хардкод UI-строк.
+- Layout: `ModuleHelper::getLayoutPath('mod_bsjshop_filter', $params->get('layout', 'default'))`.
+- Параметры модуля: только `$params->get()`, затем санитайз.
+- Логика каталога — в `BsjshopFilterHelper`. AJAX: `filterAjax()`, CSRF + `module_id` из `#__modules`.
+- Namespace: `Bestsite\Module\BsjshopFilter`. В src: `\defined('_JEXEC') or die;`.
+- Не переводить этот модуль на WebAssetManager без явной задачи.
+- Ассеты: `version` = `$assetVersion` / `BsjshopFilterHelper::VERSION`.

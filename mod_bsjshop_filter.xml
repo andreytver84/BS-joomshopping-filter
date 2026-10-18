@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" method="upgrade">
+    <name>MOD_BSJSHOP_FILTER</name>
+    <author>Andrey Uvikov</author>
+    <authorEmail>order@bestsite-studio.ru</authorEmail>
+    <authorUrl>https://bestsite-tver.ru</authorUrl>
+    <creationDate>2026</creationDate>
+    <copyright>Copyright (C) 2026 Andrey Uvikov</copyright>
+    <license>GNU General Public License version 2 or later</license>
+    <version>1.0.0</version>
+    <description><![CDATA[
+        <div style="background:#f4f7f9;padding:20px;border-left:5px solid #004E82;border-radius:4px;font-family:sans-serif;margin-bottom:20px;">
+            <h2 style="margin-top:0;color:#004E82;">BS JoomShopping Filter</h2>
+            <p>AJAX-каталог товаров JoomShopping 5 для Joomla 4, 5 и 6: категории, диапазон цены и характеристика «Площадь».</p>
+            <h3 style="color:#333;border-bottom:1px solid #ccc;padding-bottom:5px;margin-top:20px;">Настройка</h3>
+            <ol>
+                <li>Опубликуйте модуль на странице каталога. Заголовок задаётся полем «Заголовок каталога».</li>
+                <li>Укажите ID родительской категории или список ID категорий для вкладок. Пустые поля — корневые опубликованные категории.</li>
+                <li>Введите ID характеристики площади (JoomShopping → Характеристики). Для диапазона лучше текстовое числовое поле.</li>
+                <li>Дополнительные характеристики карточки — через запятую, например <code>3,4</code>.</li>
+            </ol>
+            <p style="background:#fff;padding:10px;border:1px dashed #999;margin-top:15px;">
+                Нужен установленный и опубликованный компонент <b>JoomShopping 5</b>. Список подгружается через AJAX без перезагрузки страницы.
+            </p>
+        </div>
+    ]]></description>
+    <namespace path="src">Bestsite\Module\BsjshopFilter</namespace>
+    <files>
+        <filename module="mod_bsjshop_filter">mod_bsjshop_filter.php</filename>
+        <filename>helper.php</filename>
+        <folder>src</folder>
+        <folder>services</folder>
+        <folder>tmpl</folder>
+        <folder>language</folder>
+        <folder>assets</folder>
+    </files>
+    <languages>
+        <language tag="ru-RU">language/ru-RU/ru-RU.mod_bsjshop_filter.ini</language>
+        <language tag="ru-RU">language/ru-RU/ru-RU.mod_bsjshop_filter.sys.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.mod_bsjshop_filter.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.mod_bsjshop_filter.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="MOD_BSJSHOP_FILTER_FIELDSET_BASIC">
+                <field name="catalog_title" type="text" label="MOD_BSJSHOP_FILTER_FIELD_TITLE_LABEL" default="MOD_BSJSHOP_FILTER_DEFAULT_TITLE" translate_default="true" />
+
+                <field name="parent_category_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_PARENT_CAT_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_PARENT_CAT_DESC" default="0" min="0" step="1" />
+
+                <field name="category_ids" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CAT_IDS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_CAT_IDS_DESC" default="" />
+
+                <field name="show_all_tab" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_ALL_LABEL" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="show_price" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_PRICE_LABEL" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="show_area" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_AREA_LABEL" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="extra_field_area_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_AREA_ID_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_AREA_ID_DESC" default="0" min="0" step="1" />
+
+                <field name="extra_field_area_unit" type="text" label="MOD_BSJSHOP_FILTER_FIELD_AREA_UNIT_LABEL" default="м²" />
+
+                <field name="card_extra_fields" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELDS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELDS_DESC" default="" />
+
+                <field name="limit" type="number" label="MOD_BSJSHOP_FILTER_FIELD_LIMIT_LABEL" default="6" min="1" max="48" step="1" />
+
+                <field name="ordering" type="list" label="MOD_BSJSHOP_FILTER_FIELD_ORDERING_LABEL" default="name">
+                    <option value="name">MOD_BSJSHOP_FILTER_OPTION_ORDER_NAME</option>
+                    <option value="price">MOD_BSJSHOP_FILTER_OPTION_ORDER_PRICE</option>
+                    <option value="date">MOD_BSJSHOP_FILTER_OPTION_ORDER_DATE</option>
+                    <option value="id">MOD_BSJSHOP_FILTER_OPTION_ORDER_ID</option>
+                </field>
+
+                <field name="ordering_dir" type="list" label="MOD_BSJSHOP_FILTER_FIELD_ORDER_DIR_LABEL" default="ASC">
+                    <option value="ASC">MOD_BSJSHOP_FILTER_OPTION_ASC</option>
+                    <option value="DESC">MOD_BSJSHOP_FILTER_OPTION_DESC</option>
+                </field>
+
+                <field name="currency_suffix" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CURRENCY_LABEL" default="₽" />
+
+                <field name="price_decimals" type="number" label="MOD_BSJSHOP_FILTER_FIELD_DECIMALS_LABEL" default="0" min="0" max="2" step="1" />
+            </fieldset>
+
+            <fieldset name="advanced">
+                <field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" class="form-select" />
+                <field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" />
+                <field name="cache" type="list" label="COM_MODULES_FIELD_CACHING_LABEL" default="0">
+                    <option value="1">JGLOBAL_USE_GLOBAL</option>
+                    <option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+                </field>
+                <field name="cache_time" type="number" label="COM_MODULES_FIELD_CACHE_TIME_LABEL" default="0" />
+            </fieldset>
+        </fields>
+    </config>
+    <updateservers>
+        <server type="extension" priority="1" name="BS JoomShopping Filter Update Server">https://raw.githubusercontent.com/andreytver84/BS-joomshopping-filter/main/update.xml</server>
+    </updateservers>
+</extension>

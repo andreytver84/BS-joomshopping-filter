@@ -1,0 +1,288 @@
+.bsjf {
+    --bsjf-title: #2f3b2c;
+    --bsjf-text: #3a332b;
+    --bsjf-muted: #8a8378;
+    --bsjf-accent: #c45c32;
+    --bsjf-tab: #5c4e3a;
+    --bsjf-tab-bg: #efebe3;
+    --bsjf-panel: #f3eee6;
+    --bsjf-line: #e4ddd2;
+    --bsjf-white: #fff;
+    --bsjf-radius: 14px;
+    --bsjf-radius-sm: 10px;
+    box-sizing: border-box;
+    color: var(--bsjf-text);
+    max-width: 1180px;
+}
+
+.bsjf *,
+.bsjf *::before,
+.bsjf *::after {
+    box-sizing: border-box;
+}
+
+.bsjf-title {
+    margin: 0 0 1.1rem;
+    color: var(--bsjf-title);
+    font-size: clamp(1.7rem, 2.4vw, 2.35rem);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.bsjf-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+}
+
+.bsjf-tab {
+    appearance: none;
+    border: 0;
+    border-radius: 999px;
+    background: var(--bsjf-tab-bg);
+    color: var(--bsjf-tab);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.92rem;
+    line-height: 1;
+    padding: 0.55rem 0.95rem;
+}
+
+.bsjf-tab.is-active {
+    background: var(--bsjf-tab);
+    color: var(--bsjf-white);
+}
+
+.bsjf-filters {
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
+    align-items: end;
+    margin-bottom: 1.4rem;
+}
+
+.bsjf-range {
+    background: var(--bsjf-panel);
+    border-radius: var(--bsjf-radius);
+    padding: 0.7rem 0.9rem 0.85rem;
+}
+
+.bsjf-range-label {
+    color: var(--bsjf-muted);
+    font-size: 0.82rem;
+    margin-bottom: 0.45rem;
+}
+
+.bsjf-range-row {
+    display: grid;
+    gap: 0.55rem;
+    grid-template-columns: 1fr 1fr;
+}
+
+.bsjf-input {
+    width: 100%;
+    border: 1px solid var(--bsjf-line);
+    border-radius: var(--bsjf-radius-sm);
+    background: var(--bsjf-white);
+    color: var(--bsjf-text);
+    font: inherit;
+    padding: 0.55rem 0.7rem;
+}
+
+.bsjf-input:focus {
+    outline: 2px solid rgba(196, 92, 50, 0.35);
+    outline-offset: 1px;
+}
+
+.bsjf-input::-webkit-outer-spin-button,
+.bsjf-input::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+.bsjf-input[type="number"] {
+    appearance: textfield;
+}
+
+.bsjf-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding-bottom: 0.15rem;
+}
+
+.bsjf-btn {
+    appearance: none;
+    border: 0;
+    border-radius: 999px;
+    background: var(--bsjf-accent);
+    color: var(--bsjf-white);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1;
+    padding: 0.7rem 1.15rem;
+}
+
+.bsjf-btn:hover,
+.bsjf-card-link:hover,
+.bsjf-btn-reset:hover {
+    filter: brightness(0.96);
+}
+
+.bsjf-btn-reset {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--bsjf-accent);
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+}
+
+.bsjf-grid {
+    display: grid;
+    gap: 1.4rem 1.1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    position: relative;
+}
+
+.bsjf.is-loading .bsjf-grid {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.bsjf-card-media {
+    display: block;
+    overflow: hidden;
+    border-radius: 16px;
+    aspect-ratio: 16 / 11;
+    background: #e8e1d4;
+}
+
+.bsjf-card-media img,
+.bsjf-card-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+}
+
+.bsjf-card:hover .bsjf-card-media img {
+    transform: scale(1.03);
+}
+
+.bsjf-card-placeholder {
+    background: linear-gradient(135deg, #e8e1d4, #d9d0c2);
+}
+
+.bsjf-card-title {
+    margin: 0.75rem 0 0.35rem;
+    font-size: 1.02rem;
+    font-weight: 650;
+    line-height: 1.3;
+}
+
+.bsjf-card-title a {
+    color: var(--bsjf-title);
+    text-decoration: none;
+}
+
+.bsjf-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.15rem 0.15rem;
+    color: var(--bsjf-muted);
+    font-size: 0.86rem;
+    margin: 0 0 0.55rem;
+}
+
+.bsjf-meta-sep {
+    width: 0.45rem;
+    height: 0.45rem;
+    margin: 0 0.28rem;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: none;
+    position: relative;
+}
+
+.bsjf-meta-sep::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #c9c2b6;
+    transform: translate(-50%, -50%);
+}
+
+.bsjf-card-footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.bsjf-card-price {
+    color: var(--bsjf-accent);
+    font-weight: 700;
+}
+
+.bsjf-card-link {
+    color: var(--bsjf-accent);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.bsjf-empty {
+    margin: 0.5rem 0 0;
+    color: var(--bsjf-muted);
+}
+
+.bsjf-more-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.6rem;
+}
+
+.bsjf-more {
+    min-width: 9.5rem;
+}
+
+.bsjf-error {
+    color: #8a2b1d;
+    background: #f8e8e3;
+    border-radius: var(--bsjf-radius-sm);
+    padding: 0.8rem 1rem;
+}
+
+.is-hidden {
+    display: none !important;
+}
+
+@media (max-width: 960px) {
+    .bsjf-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bsjf-actions {
+        grid-column: 1 / -1;
+    }
+
+    .bsjf-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .bsjf-filters,
+    .bsjf-grid {
+        grid-template-columns: 1fr;
+    }
+}

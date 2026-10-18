@@ -1,0 +1,22 @@
+---
+description: Манифест модуля и update.xml.
+globs: "{mod_bsjshop_filter.xml,update.xml}"
+alwaysApply: false
+---
+
+# Манифест и обновления
+
+`mod_bsjshop_filter.xml`:
+
+- `type="module" client="site" method="upgrade"`.
+- `<version>` = единственный SemVer источника. Сверяй с `$assetVersion`, `BsjshopFilterHelper::VERSION` и `update.xml`.
+- `<description>` — короткий HTML в CDATA для экрана установки. Без `<script>`, без внешних CSS.
+- Поля админки: `label`/`description` только языковые ключи. `translate_default="true"` для дефолтных текстов.
+- Не удаляй `<updateservers>`, `namespace`, `services`, `src` и папку `language` из `<files>`.
+
+`update.xml`:
+
+- `<element>mod_bsjshop_filter</element>`, `<type>module</type>`, `<client>0</client>`.
+- `<targetplatform name="joomla" version="^[4-9]" />` — Joomla 4/5/6.
+- `<downloadurl>` должен указывать на ZIP того же тега, что и `<version>`.
+- Новая версия: xml + php + helper VERSION + update.xml + имя GitHub release. Подробности в скиле `joomla-5-6` → `versions.md`.
