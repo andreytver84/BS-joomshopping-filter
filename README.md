@@ -13,10 +13,10 @@ Site-модуль каталога с AJAX-фильтром для **JoomShoppin
 ### Возможности
 
 - Вкладки категорий, включая пункт «Все»
-- Диапазоны цены и площади
-- Карточки товара: фото, название, характеристики, цена, ссылка «Подробнее»
-- Кнопка «Показать ещё» без перезагрузки страницы
-- Настройка ID категорий и характеристик из админки модуля
+- Диапазоны цены и площади, каждый можно скрыть
+- Карточки товара: фото, название, выбранные характеристики с префиксом и постфиксом, цена, ссылка «Подробнее»
+- Кнопка «Показать ещё»: свой текст, CSS-классы, можно отключить
+- Сколько товаров показывать за раз — в настройках модуля
 
 ### Зависимости
 
@@ -46,10 +46,10 @@ A site module with an AJAX catalog filter for **JoomShopping 5** on Joomla 4, 5 
 ### Features
 
 - Category tabs, including All
-- Price and area ranges
-- Product cards: image, name, extra fields, price, details link
-- Show more via AJAX
-- Category and extra field IDs are configured in the module settings
+- Price and area ranges, each can be hidden
+- Product cards: image, name, chosen extra fields with prefix and postfix, price, details link
+- Show more button: custom text, CSS classes, can be turned off
+- How many products load at once is set in the module
 
 ### Requirements
 

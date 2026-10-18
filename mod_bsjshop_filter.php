@@ -14,7 +14,7 @@ use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-$assetVersion = '1.0.0';
+$assetVersion = '1.1.0';
 $app = Factory::getApplication();
 $doc = $app->getDocument();
 $base = Uri::root(true);

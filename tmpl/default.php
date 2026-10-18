@@ -45,6 +45,16 @@ $areaTo = $filters['area_to'] ?? $areaMax;
 $activeCat = (int) ($filters['category_id'] ?? 0);
 $limit = (int) ($filters['limit'] ?? $params->get('limit', 6));
 $areaUnit = trim((string) $params->get('extra_field_area_unit', 'м²'));
+$showRanges = $showPrice || $showArea;
+$showMore = (int) $params->get('show_more', 1) === 1;
+$moreText = trim((string) $params->get('more_text', ''));
+
+if ($moreText === '' || $moreText === 'MOD_BSJSHOP_FILTER_MORE') {
+    $moreText = Text::_('MOD_BSJSHOP_FILTER_MORE');
+}
+
+$moreClass = preg_replace('/[^A-Za-z0-9 _-]/', '', (string) $params->get('more_class', ''));
+$moreClass = trim(preg_replace('/\s+/', ' ', (string) $moreClass));
 ?>
 <div
     class="bsjf<?php echo $sfx !== '' ? ' ' . $e($sfx) : ''; ?>"
@@ -87,6 +97,7 @@ $areaUnit = trim((string) $params->get('extra_field_area_unit', 'м²'));
 
         <form class="bsjf-form" data-bsjf-form action="" method="get">
             <input type="hidden" name="<?php echo 'bsjf_' . $moduleId . '_cat'; ?>" value="<?php echo $activeCat; ?>" data-bsjf-category>
+            <?php if ($showRanges) : ?>
             <div class="bsjf-filters">
                 <?php if ($showPrice) : ?>
                     <div class="bsjf-range">
@@ -151,6 +162,7 @@ $areaUnit = trim((string) $params->get('extra_field_area_unit', 'м²'));
                     <button type="button" class="bsjf-btn-reset" data-bsjf-reset><?php echo $e(Text::_('MOD_BSJSHOP_FILTER_RESET')); ?></button>
                 </div>
             </div>
+            <?php endif; ?>
         </form>
 
         <div class="bsjf-grid" data-bsjf-grid>
@@ -164,10 +176,12 @@ $areaUnit = trim((string) $params->get('extra_field_area_unit', 'м²'));
             <?php echo $e(Text::_('MOD_BSJSHOP_FILTER_EMPTY')); ?>
         </p>
 
-        <div class="bsjf-more-wrap">
-            <button type="button" class="bsjf-btn bsjf-more<?php echo $hasMore ? '' : ' is-hidden'; ?>" data-bsjf-more>
-                <?php echo $e(Text::_('MOD_BSJSHOP_FILTER_MORE')); ?>
-            </button>
-        </div>
+        <?php if ($showMore) : ?>
+            <div class="bsjf-more-wrap">
+                <button type="button" class="bsjf-btn bsjf-more<?php echo $moreClass !== '' ? ' ' . $e($moreClass) : ''; ?><?php echo $hasMore ? '' : ' is-hidden'; ?>" data-bsjf-more>
+                    <?php echo $e($moreText); ?>
+                </button>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 </div>

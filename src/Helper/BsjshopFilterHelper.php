@@ -26,7 +26,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.1.0';
 
     public function isShopReady(): bool
     {
@@ -202,7 +202,8 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 
         $nameCol = $this->getLangColumn('#__jshopping_products', 'name');
         $areaFieldId = (int) $params->get('extra_field_area_id', 0);
-        $cardFieldIds = $this->getCardFieldIds($params, $areaFieldId);
+        $cardFields = $this->getCardFields($params);
+        $cardFieldIds = array_map(static fn (array $field): int => $field['id'], $cardFields);
         $efTable = $this->extraFieldsTable();
         $needEf = $efTable !== '' && $efTable !== '#__jshopping_products' && ($areaFieldId > 0 || $cardFieldIds);
 
@@ -300,7 +301,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         }
 
         return [
-            'items'   => $this->prepareItems($rows, $params, $cardFieldIds, $areaFieldId),
+            'items'   => $this->prepareItems($rows, $params, $cardFields),
             'hasMore' => $hasMore,
         ];
     }
@@ -344,9 +345,10 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             ->bind(':areaTo', $to);
     }
 
-    private function prepareItems(array $rows, Registry $params, array $cardFieldIds, int $areaFieldId): array
+    private function prepareItems(array $rows, Registry $params, array $cardFields): array
     {
-        $valueMap = $this->loadListValueNames($rows, $cardFieldIds);
+        $fieldIds = array_map(static fn (array $field): int => $field['id'], $cardFields);
+        $valueMap = $this->loadListValueNames($rows, $fieldIds);
         $items = [];
 
         foreach ($rows as $row) {
@@ -358,7 +360,8 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             $item->price = $this->formatPrice((float) $row->display_price, $params, ((int) $row->different_prices) === 1);
             $item->meta = [];
 
-            foreach ($cardFieldIds as $fieldId) {
+            foreach ($cardFields as $field) {
+                $fieldId = $field['id'];
                 $col = $this->extraFieldColumn($fieldId);
 
                 if (!isset($row->{$col}) || $row->{$col} === '' || $row->{$col} === null) {
@@ -366,31 +369,55 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
                 }
 
                 $raw = (string) $row->{$col};
-                $text = $valueMap[$fieldId][$raw] ?? $raw;
+                $text = $this->formatCardValue($valueMap[$fieldId][$raw] ?? $raw);
 
-                if ($text === '' || $text === '0') {
+                if ($text === '') {
                     continue;
                 }
 
-                if ($fieldId === $areaFieldId) {
-                    $unit = trim((string) $params->get('extra_field_area_unit', 'м²'));
-                    $number = $this->toFloat($text);
-                    $label = $number > 0 ? $this->formatNumber($number) : $text;
-
-                    if ($unit !== '' && mb_stripos($label, $unit) === false) {
-                        $label .= ' ' . $unit;
-                    }
-
-                    $text = $label;
-                }
-
-                $item->meta[] = $text;
+                $item->meta[] = $this->withAffixes($text, $field['prefix'], $field['postfix']);
             }
 
             $items[] = $item;
         }
 
         return $items;
+    }
+
+    private function formatCardValue(string $text): string
+    {
+        $text = trim($text);
+
+        if ($text === '' || $text === '0') {
+            return '';
+        }
+
+        if (preg_match('/^\d+(?:[.,]\d+)?$/', $text)) {
+            $number = $this->toFloat($text);
+            $decimals = floor($number) == $number ? 0 : 2;
+            $formatted = $this->formatNumber($number, $decimals);
+
+            return $decimals > 0 ? rtrim(rtrim($formatted, '0'), '.') : $formatted;
+        }
+
+        return $text;
+    }
+
+    private function withAffixes(string $text, string $prefix, string $postfix): string
+    {
+        $parts = [];
+
+        if ($prefix !== '') {
+            $parts[] = $prefix;
+        }
+
+        $parts[] = $text;
+
+        if ($postfix !== '') {
+            $parts[] = $postfix;
+        }
+
+        return implode(' ', $parts);
     }
 
     private function loadListValueNames(array $rows, array $fieldIds): array
@@ -570,17 +597,59 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         return new Registry($row->params);
     }
 
-    private function getCardFieldIds(Registry $params, int $areaFieldId): array
+    private function getCardFields(Registry $params): array
     {
-        $ids = $this->parseIdList($params->get('card_extra_fields', ''));
+        $raw = $params->get('card_fields', []);
 
-        if ($areaFieldId > 0) {
-            array_unshift($ids, $areaFieldId);
+        if ($raw instanceof Registry) {
+            $raw = $raw->toArray();
+        } elseif (is_object($raw)) {
+            $raw = (array) $raw;
         }
 
-        $ids = array_values(array_unique(array_filter($ids, static fn ($id) => $id > 0)));
+        $fields = [];
+        $seen = [];
 
-        return array_values(array_filter($ids, fn ($id) => $this->extraFieldColumnExists($id)));
+        if (is_array($raw)) {
+            foreach ($raw as $row) {
+                if ($row instanceof Registry) {
+                    $row = $row->toArray();
+                } elseif (is_object($row)) {
+                    $row = (array) $row;
+                }
+
+                if (!is_array($row)) {
+                    continue;
+                }
+
+                $id = (int) ($row['field_id'] ?? 0);
+
+                if ($id < 1 || isset($seen[$id]) || !$this->extraFieldColumnExists($id)) {
+                    continue;
+                }
+
+                $seen[$id] = true;
+                $fields[] = [
+                    'id'      => $id,
+                    'prefix'  => $this->plainLabel($row['prefix'] ?? ''),
+                    'postfix' => $this->plainLabel($row['postfix'] ?? ''),
+                ];
+            }
+        }
+
+        return $fields;
+    }
+
+    private function plainLabel($value): string
+    {
+        $value = trim(strip_tags((string) $value));
+        $value = preg_replace('/\s+/u', ' ', $value) ?? '';
+
+        if (mb_strlen($value) > 40) {
+            $value = mb_substr($value, 0, 40);
+        }
+
+        return $value;
     }
 
     private function productUrl(int $productId, int $categoryId): string

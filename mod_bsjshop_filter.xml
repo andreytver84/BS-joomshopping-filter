@@ -7,7 +7,7 @@
     <creationDate>2026</creationDate>
     <copyright>Copyright (C) 2026 Andrey Uvikov</copyright>
     <license>GNU General Public License version 2 or later</license>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <description><![CDATA[
         <div style="background:#f4f7f9;padding:20px;border-left:5px solid #004E82;border-radius:4px;font-family:sans-serif;margin-bottom:20px;">
             <h2 style="margin-top:0;color:#004E82;">BS JoomShopping Filter</h2>
@@ -17,7 +17,8 @@
                 <li>Опубликуйте модуль на странице каталога. Заголовок задаётся полем «Заголовок каталога».</li>
                 <li>Укажите ID родительской категории или список ID категорий для вкладок. Пустые поля — корневые опубликованные категории.</li>
                 <li>Введите ID характеристики площади (JoomShopping → Характеристики). Для диапазона лучше текстовое числовое поле.</li>
-                <li>Дополнительные характеристики карточки — через запятую, например <code>3,4</code>.</li>
+                <li>Фильтры цены и площади можно выключить — останутся только вкладки категорий.</li>
+                <li>Характеристики карточки (площадь, размеры, этажи) задаются списком: ID, префикс и постфикс. В фильтре они не участвуют.</li>
             </ol>
             <p style="background:#fff;padding:10px;border:1px dashed #999;margin-top:15px;">
                 Нужен установленный и опубликованный компонент <b>JoomShopping 5</b>. Список подгружается через AJAX без перезагрузки страницы.
@@ -54,23 +55,38 @@
                     <option value="1">JYES</option>
                 </field>
 
-                <field name="show_price" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_PRICE_LABEL" default="1">
+                <field name="show_price" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_PRICE_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_SHOW_PRICE_DESC" default="1">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
 
-                <field name="show_area" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_AREA_LABEL" default="1">
+                <field name="show_area" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_AREA_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_SHOW_AREA_DESC" default="1">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
 
-                <field name="extra_field_area_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_AREA_ID_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_AREA_ID_DESC" default="0" min="0" step="1" />
+                <field name="extra_field_area_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_AREA_ID_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_AREA_ID_DESC" default="0" min="0" step="1" showon="show_area:1" />
 
-                <field name="extra_field_area_unit" type="text" label="MOD_BSJSHOP_FILTER_FIELD_AREA_UNIT_LABEL" default="м²" />
+                <field name="extra_field_area_unit" type="text" label="MOD_BSJSHOP_FILTER_FIELD_AREA_UNIT_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_AREA_UNIT_DESC" default="м²" showon="show_area:1" />
 
-                <field name="card_extra_fields" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELDS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELDS_DESC" default="" />
+                <field name="card_fields" type="subform" label="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELDS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELDS_DESC" multiple="true" layout="joomla.form.field.subform.repeatable-table">
+                    <form>
+                        <field name="field_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELD_ID_LABEL" min="1" step="1" />
+                        <field name="prefix" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CARD_PREFIX_LABEL" />
+                        <field name="postfix" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CARD_POSTFIX_LABEL" />
+                    </form>
+                </field>
 
-                <field name="limit" type="number" label="MOD_BSJSHOP_FILTER_FIELD_LIMIT_LABEL" default="6" min="1" max="48" step="1" />
+                <field name="limit" type="number" label="MOD_BSJSHOP_FILTER_FIELD_LIMIT_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_LIMIT_DESC" default="6" min="1" max="48" step="1" />
+
+                <field name="show_more" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_MORE_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_SHOW_MORE_DESC" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="more_text" type="text" label="MOD_BSJSHOP_FILTER_FIELD_MORE_TEXT_LABEL" default="MOD_BSJSHOP_FILTER_MORE" translate_default="true" showon="show_more:1" />
+
+                <field name="more_class" type="text" label="MOD_BSJSHOP_FILTER_FIELD_MORE_CLASS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_MORE_CLASS_DESC" default="" showon="show_more:1" />
 
                 <field name="ordering" type="list" label="MOD_BSJSHOP_FILTER_FIELD_ORDERING_LABEL" default="name">
                     <option value="name">MOD_BSJSHOP_FILTER_OPTION_ORDER_NAME</option>

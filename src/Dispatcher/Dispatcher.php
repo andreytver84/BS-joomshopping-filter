@@ -11,10 +11,14 @@ namespace Bestsite\Module\BsjshopFilter\Site\Dispatcher;
 
 use Bestsite\Module\BsjshopFilter\Site\Helper\BsjshopFilterHelper;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
+use Joomla\CMS\Helper\HelperFactoryAwareInterface;
+use Joomla\CMS\Helper\HelperFactoryAwareTrait;
 use Joomla\CMS\Uri\Uri;
 
-class Dispatcher extends AbstractModuleDispatcher
+class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
 {
+    use HelperFactoryAwareTrait;
+
     protected function getLayoutData(): array
     {
         $data = parent::getLayoutData();
