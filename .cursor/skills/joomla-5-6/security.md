@@ -1,6 +1,6 @@
 # Безопасность Joomla 5/6 (этот модуль)
 
-AJAX идёт через `com_ajax`. Метод `filterAjax` проверяет CSRF (`Session::checkToken('request')`), published/access модуля и view levels товара.
+AJAX идёт через `com_ajax`. Метод `filterAjax` проверяет CSRF (`Session::checkToken('request')`), site-модуль (`client_id = 0`), language, published/access модуля и view levels товара и категории.
 
 ## Обязательно
 
@@ -18,7 +18,13 @@ htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 
 ## SQL
 
-Только query/bind/`whereIn`. ID категорий в EXISTS — только после `intval`. Имя колонки extra field: `extra_field_{id}` после проверки `getTableColumns`. Языковой суффикс — только `^[a-z]{2}-[A-Z]{2}$`.
+Только query/bind/`whereIn`. ID категорий в EXISTS — только после `intval`. Пустой список после intval — `WHERE 0 = 1`, не снимать EXISTS. Имя колонки extra field: `extra_field_{id}` после проверки `getTableColumns`. Языковой суффикс — только `^[a-z]{2}-[A-Z]{2}$` и для `JSFactory::getLang()`, не только для `Language::getTag()`.
+
+## ACL витрины
+
+- Категории: `category_publish = 1` и `access` через `whereIn` по `getAuthorisedViewLevels()`, если колонка есть.
+- Товары и bounds (min/max цены и площади): `product_publish`, `parent_id = 0`, тот же `p.access`.
+- AJAX-модуль: `client_id = 0`; `language` только `*`, пусто или текущий tag.
 
 ## Запреты
 

@@ -26,7 +26,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 
-    public const VERSION = '1.4.0';
+    public const VERSION = '1.4.1';
 
     public function isShopReady(): bool
     {
@@ -103,6 +103,8 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             ->from($db->quoteName('#__jshopping_categories'))
             ->where($db->quoteName('category_publish') . ' = 1')
             ->order($db->quoteName('ordering') . ' ASC');
+
+        $this->applyCategoryAccess($query);
 
         if ($explicit) {
             $query->whereIn($db->quoteName('category_id'), $explicit, ParameterType::INTEGER);
@@ -245,12 +247,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             ->where($db->quoteName('p.product_publish') . ' = 1')
             ->where($db->quoteName('p.parent_id') . ' = 0');
 
-        if ($this->columnExists('#__jshopping_products', 'access')) {
-            $levels = Factory::getApplication()->getIdentity()->getAuthorisedViewLevels();
-            $levels = array_map('intval', $levels ?: [1]);
-            $query->whereIn($db->quoteName('p.access'), $levels, ParameterType::INTEGER);
-        }
-
+        $this->applyProductAccess($query);
         $this->applyCategoryFilter($query, $filterCats);
 
         if ($needEf) {
@@ -488,6 +485,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             ->where($db->quoteName('p.product_publish') . ' = 1')
             ->where($db->quoteName('p.parent_id') . ' = 0');
 
+        $this->applyProductAccess($query);
         $this->applyCategoryFilter($query, $categoryIds);
         $db->setQuery($query);
         $row = $db->loadObject();
@@ -526,6 +524,8 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             ->from($db->quoteName('#__jshopping_products', 'p'))
             ->where($db->quoteName('p.product_publish') . ' = 1')
             ->where($db->quoteName('p.parent_id') . ' = 0');
+
+        $this->applyProductAccess($query);
 
         if ($efTable !== '#__jshopping_products') {
             $query->join(
@@ -568,6 +568,8 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         $categoryIds = array_values(array_unique(array_filter(array_map('intval', $categoryIds), static fn ($id) => $id > 0)));
 
         if (!$categoryIds) {
+            $query->where('0 = 1');
+
             return;
         }
 
@@ -588,9 +590,10 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 
         $db = $this->db();
         $query = $db->getQuery(true)
-            ->select($db->quoteName(['id', 'module', 'params', 'published', 'access', 'language']))
+            ->select($db->quoteName(['id', 'module', 'params', 'published', 'access', 'language', 'client_id']))
             ->from($db->quoteName('#__modules'))
             ->where($db->quoteName('id') . ' = :id')
+            ->where($db->quoteName('client_id') . ' = 0')
             ->bind(':id', $moduleId, ParameterType::INTEGER);
 
         $db->setQuery($query);
@@ -600,9 +603,14 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             throw new \RuntimeException(Text::_('MOD_BSJSHOP_FILTER_ERROR_MODULE'), 404);
         }
 
-        $levels = Factory::getApplication()->getIdentity()->getAuthorisedViewLevels();
+        $modLang = (string) $row->language;
+        $currentLang = Factory::getApplication()->getLanguage()->getTag();
 
-        if (!in_array((int) $row->access, $levels, true)) {
+        if ($modLang !== '' && $modLang !== '*' && $modLang !== $currentLang) {
+            throw new \RuntimeException(Text::_('MOD_BSJSHOP_FILTER_ERROR_MODULE'), 404);
+        }
+
+        if (!in_array((int) $row->access, $this->authorisedViewLevels(), true)) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 
@@ -894,17 +902,49 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 
     private function langTag(): string
     {
+        $tag = '';
+
         if (class_exists('JSFactory')) {
             $lang = \JSFactory::getLang();
 
             if (is_object($lang) && !empty($lang->lang)) {
-                return (string) $lang->lang;
+                $tag = (string) $lang->lang;
             }
         }
 
-        $tag = Factory::getApplication()->getLanguage()->getTag();
+        if ($tag === '') {
+            $tag = (string) Factory::getApplication()->getLanguage()->getTag();
+        }
 
         return preg_match('/^[a-z]{2}-[A-Z]{2}$/', $tag) ? $tag : 'en-GB';
+    }
+
+    private function authorisedViewLevels(): array
+    {
+        $user = Factory::getApplication()->getIdentity();
+        $levels = $user ? $user->getAuthorisedViewLevels() : [1];
+
+        return array_map('intval', $levels ?: [1]);
+    }
+
+    private function applyProductAccess($query): void
+    {
+        if (!$this->columnExists('#__jshopping_products', 'access')) {
+            return;
+        }
+
+        $levels = $this->authorisedViewLevels();
+        $query->whereIn($this->db()->quoteName('p.access'), $levels, ParameterType::INTEGER);
+    }
+
+    private function applyCategoryAccess($query): void
+    {
+        if (!$this->columnExists('#__jshopping_categories', 'access')) {
+            return;
+        }
+
+        $levels = $this->authorisedViewLevels();
+        $query->whereIn($this->db()->quoteName('access'), $levels, ParameterType::INTEGER);
     }
 
     private function columnExists(string $table, string $column): bool
