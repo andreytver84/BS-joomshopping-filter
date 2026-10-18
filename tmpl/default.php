@@ -25,6 +25,7 @@ $safeClass = static function (string $value): string {
     return trim(preg_replace('/\s+/', ' ', (string) $value));
 };
 $sfx = $safeClass((string) $params->get('moduleclass_sfx', ''));
+$showTitle = (int) $params->get('show_title', 1) === 1;
 $title = trim((string) $params->get('catalog_title', ''));
 $showAll = (int) $params->get('show_all_tab', 1) === 1;
 $showPrice = (int) $params->get('show_price', 1) === 1;
@@ -84,7 +85,7 @@ $colsSm = max(1, min(6, (int) $params->get('cols_sm', 1)));
     data-area-max="<?php echo $e((string) $areaMax); ?>"
     style="--bsjf-cols: <?php echo $colsLg; ?>; --bsjf-cols-md: <?php echo $colsMd; ?>; --bsjf-cols-sm: <?php echo $colsSm; ?>;"
 >
-    <?php if ($title !== '') : ?>
+    <?php if ($showTitle && $title !== '') : ?>
         <h2 class="bsjf-title"><?php echo $e($title); ?></h2>
     <?php endif; ?>
 

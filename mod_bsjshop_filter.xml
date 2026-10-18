@@ -45,7 +45,12 @@
     <config>
         <fields name="params">
             <fieldset name="basic" label="MOD_BSJSHOP_FILTER_FIELDSET_BASIC">
-                <field name="catalog_title" type="text" label="MOD_BSJSHOP_FILTER_FIELD_TITLE_LABEL" default="MOD_BSJSHOP_FILTER_DEFAULT_TITLE" translate_default="true" />
+                <field name="show_title" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_TITLE_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_SHOW_TITLE_DESC" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="catalog_title" type="text" label="MOD_BSJSHOP_FILTER_FIELD_TITLE_LABEL" default="MOD_BSJSHOP_FILTER_DEFAULT_TITLE" translate_default="true" showon="show_title:1" />
 
                 <field name="parent_category_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_PARENT_CAT_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_PARENT_CAT_DESC" default="0" min="0" step="1" />
 
