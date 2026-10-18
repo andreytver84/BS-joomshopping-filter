@@ -1,10 +1,11 @@
 .bsjf {
     --bsjf-title: #2f3b2c;
-    --bsjf-text: #3a332b;
+    --bsjf-text: #192519;
     --bsjf-muted: #8a8378;
     --bsjf-accent: #c45c32;
-    --bsjf-tab: #5c4e3a;
-    --bsjf-tab-bg: #efebe3;
+    --bsjf-tab: #192519;
+    --bsjf-tab-bg: #fff;
+    --bsjf-price: #192519;
     --bsjf-panel: #E8E3D6;
     --bsjf-line: #e4ddd2;
     --bsjf-white: #fff;
@@ -37,25 +38,33 @@
 .bsjf-tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
+    gap: 0.5rem;
     margin-bottom: 1rem;
 }
 
-.bsjf-tab {
+.bsjf .bsjf-tab {
     appearance: none;
-    border: 0;
+    -webkit-appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--bsjf-tab);
     border-radius: 999px;
     background: var(--bsjf-tab-bg);
+    box-shadow: none;
     color: var(--bsjf-tab);
     cursor: pointer;
     font: inherit;
     font-size: 0.92rem;
-    line-height: 1;
-    padding: 0.55rem 0.95rem;
+    font-weight: 400;
+    line-height: 1.15;
+    padding: 0.48rem 1.05rem;
+    white-space: nowrap;
 }
 
-.bsjf-tab.is-active {
-    background: var(--bsjf-tab);
+.bsjf .bsjf-tab.is-active {
+    background: var(--bsjf-accent);
+    border-color: var(--bsjf-accent);
     color: var(--bsjf-white);
 }
 
@@ -251,7 +260,12 @@
 }
 
 .bsjf-card-price {
-    color: var(--bsjf-accent);
+    color: var(--bsjf-price);
+    font-weight: 700;
+}
+
+.bsjf-price-prefix {
+    margin-right: 0.3em;
     font-weight: 700;
 }
 
@@ -311,7 +325,7 @@
         -webkit-overflow-scrolling: touch;
     }
 
-    .bsjf-tab {
+    .bsjf .bsjf-tab {
         flex: 0 0 auto;
     }
 

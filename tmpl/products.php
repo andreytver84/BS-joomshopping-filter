@@ -39,7 +39,12 @@ foreach ($items as $item) :
             </p>
         <?php endif; ?>
         <div class="bsjf-card-footer">
-            <div class="bsjf-card-price"><?php echo $e($item->price); ?></div>
+            <div class="bsjf-card-price">
+                <?php if (!empty($item->pricePrefix)) : ?>
+                    <span class="bsjf-price-prefix"><?php echo $e($item->pricePrefix); ?></span>
+                <?php endif; ?>
+                <span class="bsjf-price-value"><?php echo $e($item->price); ?></span>
+            </div>
             <a class="bsjf-card-link" href="<?php echo $e($item->url); ?>">
                 <?php echo $e(Text::_('MOD_BSJSHOP_FILTER_DETAILS')); ?>
             </a>

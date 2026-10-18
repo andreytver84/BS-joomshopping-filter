@@ -26,7 +26,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 
-    public const VERSION = '1.3.0';
+    public const VERSION = '1.4.0';
 
     public function isShopReady(): bool
     {
@@ -117,7 +117,15 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 
         foreach ($rows as $row) {
             $row->id = (int) $row->id;
-            $row->name = (string) $row->name;
+            $row->name = trim(strip_tags((string) $row->name));
+        }
+
+        if ($explicit) {
+            $order = array_flip($explicit);
+            usort(
+                $rows,
+                static fn ($a, $b): int => ($order[$a->id] ?? PHP_INT_MAX) <=> ($order[$b->id] ?? PHP_INT_MAX)
+            );
         }
 
         return $rows;
@@ -358,7 +366,10 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             $item->name = (string) $row->name;
             $item->url = $this->productUrl((int) $row->product_id, (int) ($row->main_category_id ?? 0));
             $item->image = $this->productImage((string) $row->image);
-            $item->price = $this->formatPrice((float) $row->display_price, $params, ((int) $row->different_prices) === 1);
+            $showFrom = (int) $params->get('price_from_prefix', 1) === 1
+                || ((int) $row->different_prices) === 1;
+            $item->pricePrefix = $showFrom ? Text::_('MOD_BSJSHOP_FILTER_PRICE_FROM') : '';
+            $item->price = $this->formatPrice((float) $row->display_price, $params);
             $item->meta = [];
 
             foreach ($cardFields as $field) {
@@ -760,11 +771,10 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         return $code;
     }
 
-    private function formatPrice(float $price, Registry $params, bool $from): string
+    private function formatPrice(float $price, Registry $params): string
     {
         $suffix = $this->getCurrencyCode();
-        $html = ($from ? Text::_('MOD_BSJSHOP_FILTER_PRICE_FROM') . ' ' : '')
-            . $this->formatNumber($price, (int) $params->get('price_decimals', 0));
+        $html = $this->formatNumber($price, (int) $params->get('price_decimals', 0));
 
         if ($suffix !== '') {
             $html .= ' ' . $suffix;
