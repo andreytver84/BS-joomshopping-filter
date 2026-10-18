@@ -26,7 +26,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 
-    public const VERSION = '1.2.0';
+    public const VERSION = '1.3.0';
 
     public function isShopReady(): bool
     {

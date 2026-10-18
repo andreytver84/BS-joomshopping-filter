@@ -44,4 +44,40 @@ function versions() {
   };
 }
 
-module.exports = { readInput, writeOutput, repoRoot, readRepoFile, versions };
+function iniKeys(rel) {
+  const keys = [];
+  for (const line of readRepoFile(rel).split(/\r?\n/)) {
+    const match = line.match(/^([A-Z0-9_]+)=/);
+    if (match) {
+      keys.push(match[1]);
+    }
+  }
+  return keys;
+}
+
+function langDrift() {
+  const pairs = [
+    ['language/ru-RU/ru-RU.mod_bsjshop_filter.ini', 'language/en-GB/en-GB.mod_bsjshop_filter.ini'],
+    ['language/ru-RU/ru-RU.mod_bsjshop_filter.sys.ini', 'language/en-GB/en-GB.mod_bsjshop_filter.sys.ini'],
+  ];
+  const missing = [];
+
+  for (const [ruRel, enRel] of pairs) {
+    const ru = new Set(iniKeys(ruRel));
+    const en = new Set(iniKeys(enRel));
+    for (const key of ru) {
+      if (!en.has(key)) {
+        missing.push('en без ' + key);
+      }
+    }
+    for (const key of en) {
+      if (!ru.has(key)) {
+        missing.push('ru без ' + key);
+      }
+    }
+  }
+
+  return missing;
+}
+
+module.exports = { readInput, writeOutput, repoRoot, readRepoFile, versions, langDrift };

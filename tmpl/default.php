@@ -19,8 +19,12 @@ $e = static function ($value): string {
 
 $app = $app ?? Factory::getApplication();
 $moduleId = (int) $module->id;
-$sfx = preg_replace('/[^A-Za-z0-9 _-]/', '', (string) $params->get('moduleclass_sfx', ''));
-$sfx = trim(preg_replace('/\s+/', ' ', (string) $sfx));
+$safeClass = static function (string $value): string {
+    $value = preg_replace('/[^A-Za-z0-9 _-]/', '', $value);
+
+    return trim(preg_replace('/\s+/', ' ', (string) $value));
+};
+$sfx = $safeClass((string) $params->get('moduleclass_sfx', ''));
 $title = trim((string) $params->get('catalog_title', ''));
 $showAll = (int) $params->get('show_all_tab', 1) === 1;
 $showPrice = (int) $params->get('show_price', 1) === 1;
@@ -59,8 +63,9 @@ if ($moreText === '' || $moreText === 'MOD_BSJSHOP_FILTER_MORE') {
     $moreText = Text::_('MOD_BSJSHOP_FILTER_MORE');
 }
 
-$moreClass = preg_replace('/[^A-Za-z0-9 _-]/', '', (string) $params->get('more_class', ''));
-$moreClass = trim(preg_replace('/\s+/', ' ', (string) $moreClass));
+$moreClass = $safeClass((string) $params->get('more_class', ''));
+$applyClass = $safeClass((string) $params->get('apply_class', ''));
+$resetClass = $safeClass((string) $params->get('reset_class', ''));
 $colsLg = max(1, min(6, (int) $params->get('cols_lg', 3)));
 $colsMd = max(1, min(6, (int) $params->get('cols_md', 2)));
 $colsSm = max(1, min(6, (int) $params->get('cols_sm', 1)));
@@ -175,8 +180,8 @@ $colsSm = max(1, min(6, (int) $params->get('cols_sm', 1)));
                 <?php endif; ?>
 
                 <div class="bsjf-actions">
-                    <button type="submit" class="bsjf-btn"><?php echo $e(Text::_('MOD_BSJSHOP_FILTER_APPLY')); ?></button>
-                    <button type="button" class="bsjf-btn-reset" data-bsjf-reset><?php echo $e(Text::_('MOD_BSJSHOP_FILTER_RESET')); ?></button>
+                    <button type="submit" class="bsjf-btn<?php echo $applyClass !== '' ? ' ' . $e($applyClass) : ''; ?>"><?php echo $e(Text::_('MOD_BSJSHOP_FILTER_APPLY')); ?></button>
+                    <button type="button" class="bsjf-btn-reset<?php echo $resetClass !== '' ? ' ' . $e($resetClass) : ''; ?>" data-bsjf-reset><?php echo $e(Text::_('MOD_BSJSHOP_FILTER_RESET')); ?></button>
                 </div>
             </div>
             <?php endif; ?>

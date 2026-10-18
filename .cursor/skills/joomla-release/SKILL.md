@@ -10,5 +10,5 @@ description: >-
 
 1. Прочитай `.cursor/skills/joomla-5-6/versions.md`. Если меняется HTML установщика — ещё `.cursor/skills/joomla-5-6/description.md`.
 2. Если правок много — субагент `joomla-release`.
-3. Не поднимай версию без синхронного downloadurl.
+3. Не поднимай версию без синхронного downloadurl. Номер в `versions.md` не записывай. `<client>site</client>` и `targetplatform` `(4|5|6)\.` оставь как в `update.xml`.
 4. В чат: старая → новая версия, список файлов, что осталось сделать руками (tag/ZIP).

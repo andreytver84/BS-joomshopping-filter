@@ -5,7 +5,7 @@
     --bsjf-accent: #c45c32;
     --bsjf-tab: #5c4e3a;
     --bsjf-tab-bg: #efebe3;
-    --bsjf-panel: #f3eee6;
+    --bsjf-panel: #E8E3D6;
     --bsjf-line: #e4ddd2;
     --bsjf-white: #fff;
     --bsjf-radius: 16px;
@@ -67,17 +67,17 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
-    gap: 0.85rem 1rem;
+    gap: 0.85rem 1.25rem;
     width: 100%;
     margin-bottom: 1.4rem;
+    padding: 1.5rem;
+    background: var(--bsjf-panel);
+    border-radius: 8px;
 }
 
 .bsjf .bsjf-range {
     flex: 1 1 16rem;
     min-width: 0;
-    background: var(--bsjf-panel);
-    border-radius: var(--bsjf-radius);
-    padding: 0.75rem 0.95rem 0.9rem;
 }
 
 .bsjf-range-label {
@@ -355,6 +355,7 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
+        padding: 1rem;
     }
 
     .bsjf .bsjf-range,

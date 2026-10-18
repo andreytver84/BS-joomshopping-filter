@@ -1,6 +1,6 @@
 # Версии и обновления
 
-Источник правды — SemVer в четырёх местах **одним значением** (сейчас `1.2.0`).
+Источник правды — SemVer в четырёх местах **одним значением**. Номер в этот файл не записывай: читай файлы.
 
 | Место | Что править |
 |---|---|
@@ -12,7 +12,7 @@
 `update.xml`:
 
 - `<element>mod_bsjshop_filter</element>` `<type>module</type>` `<client>site</client>` (не `0`: иначе Joomla 6 не матчит site-модуль)
-- `<targetplatform name="joomla" version="^[4-9]" />`
+- `<targetplatform name="joomla" version="(4|5|6)\." />` — как в файле, на `^[4-9]` не менять
 - downloadurl: `.../releases/download/vX.Y.Z/mod_bsjshop_filter_vX.Y.Z.zip`
 - infourl: страница релизов GitHub
 
@@ -20,7 +20,7 @@
 
 `https://raw.githubusercontent.com/andreytver84/BS-joomshopping-filter/main/update.xml`
 
-После пуша в `main` Joomla видит новую версию. ZIP не собран → не поднимай номер.
+После пуша `update.xml` в `main` Joomla видит новую версию. Номер поднимай, когда просят. ZIP и тег заливает человек — в ответе укажи `vX.Y.Z` и `mod_bsjshop_filter_vX.Y.Z.zip`.
 
 ## Релиз-чеклист
 

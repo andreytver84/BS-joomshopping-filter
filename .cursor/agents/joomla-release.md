@@ -13,9 +13,9 @@ description: >-
 Когда вызван:
 
 1. Одна SemVer в `mod_bsjshop_filter.xml`, `$assetVersion`, `BsjshopFilterHelper::VERSION`, `update.xml` (version + downloadurl + tag `vX.Y.Z`).
-2. `targetplatform` оставь `^[4-9]`, пока поддерживаем 4/5/6.
+2. `<client>site</client>` и `targetplatform` `(4|5|6)\.` не меняй. Номер в `versions.md` не записывай.
 3. Description: короткий HTML, без `<script>`, синхронно с фактами модуля (категории, цена, площадь, AJAX, JoomShopping 5).
-4. Не собирай ZIP в git. Не поднимай версию, если артефакт релиза ещё не будет залит.
+4. ZIP в git не клади. Номер поднимай, когда просят; в ответе укажи тег и имя ZIP.
 5. README — только если меняется поведение для пользователя; RU и EN блоки вместе.
 
 Верни родителю:

@@ -10,9 +10,10 @@ alwaysApply: true
 ## Как работать
 
 1. Прочитай только `.cursor/skills/joomla-5-6/SKILL.md`. Дальше — **один** нужный файл из той папки, не все сразу.
-2. Тяжёлую работу **делегируй** субагентам: `joomla-structure`, `joomla-lang`, `joomla-security`, `joomla-release`. В этот чат верни 5–8 строк: статус, файлы, что проверить.
-3. Не вставляй в ответ полные `.ini`, `.xml`, README, CSS/JS. Цитируй 5–15 строк.
-4. Не раздувай DI дальше текущего Dispatcher + Helper, пока не попросили.
+2. Тяжёлую работу **делегируй** субагентам: `joomla-structure`, `joomla-ui`, `joomla-lang`, `joomla-security`, `joomla-release`. В этот чат верни 5–8 строк: статус, файлы, что проверить.
+3. Поле, фильтр и карточка — `develop.md`. Вёрстка панели и кнопок — `ui.md`. Команды: `/bsjf-field`, `/bsjf-filter`, `/bsjf-ui`, `/bsjf-version`, `/bsjf-check`.
+4. Не вставляй в ответ полные `.ini`, `.xml`, README, CSS/JS. Цитируй 5–15 строк.
+5. Не раздувай DI дальше текущего Dispatcher + Helper, пока не попросили.
 
 ## Жёсткие запреты без справочника
 

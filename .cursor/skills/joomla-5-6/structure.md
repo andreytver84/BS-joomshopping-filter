@@ -40,4 +40,15 @@ update.xml                 update server
 $layoutPath = ModuleHelper::getLayoutPath('mod_bsjshop_filter', $params->get('layout', 'default'));
 ```
 
-Override: `templates/<tmpl>/html/mod_bsjshop_filter/default.php`. CSS-классы `bsjf-*` не ломать без задачи.
+Override: `templates/<tmpl>/html/mod_bsjshop_filter/default.php`. CSS-классы `bsjf-*` и `data-bsjf*` не ломать без задачи. Визуальный контракт — [ui.md](ui.md).
+
+## Куда класть изменение
+
+| Изменение | Файлы |
+|---|---|
+| Поле админки | `mod_bsjshop_filter.xml` + оба `.ini` |
+| Условие фильтра | Helper `filtersFromRequest` + SQL, `tmpl/default.php`, `script.js` |
+| Характеристика карточки | subform `card_fields`, `tmpl/products.php` |
+| Фон, отступы, кнопки | `assets/css/style.css`, при классе кнопки — `tmpl/default.php` |
+
+Чеклист шагов — [develop.md](develop.md).

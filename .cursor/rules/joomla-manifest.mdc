@@ -16,7 +16,7 @@ alwaysApply: false
 
 `update.xml`:
 
-- `<element>mod_bsjshop_filter</element>`, `<type>module</type>`, `<client>0</client>`.
-- `<targetplatform name="joomla" version="^[4-9]" />` — Joomla 4/5/6.
+- `<element>mod_bsjshop_filter</element>`, `<type>module</type>`, `<client>site</client>`. `0` ломает сопоставление site-модуля в Joomla 6.
+- `<targetplatform name="joomla" version="(4|5|6)\." />` — Joomla 4/5/6. На `^[4-9]` не менять.
 - `<downloadurl>` должен указывать на ZIP того же тега, что и `<version>`.
 - Новая версия: xml + php + helper VERSION + update.xml + имя GitHub release. Подробности в скиле `joomla-5-6` → `versions.md`.

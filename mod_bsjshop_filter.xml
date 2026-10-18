@@ -7,7 +7,7 @@
     <creationDate>2026</creationDate>
     <copyright>Copyright (C) 2026 Andrey Uvikov</copyright>
     <license>GNU General Public License version 2 or later</license>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <description><![CDATA[
         <div style="background:#f4f7f9;padding:20px;border-left:5px solid #004E82;border-radius:4px;font-family:sans-serif;margin-bottom:20px;">
             <h2 style="margin-top:0;color:#004E82;">BS JoomShopping Filter</h2>
@@ -68,6 +68,10 @@
                 <field name="extra_field_area_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_AREA_ID_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_AREA_ID_DESC" default="0" min="0" step="1" showon="show_area:1" />
 
                 <field name="extra_field_area_unit" type="text" label="MOD_BSJSHOP_FILTER_FIELD_AREA_UNIT_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_AREA_UNIT_DESC" default="м²" showon="show_area:1" />
+
+                <field name="apply_class" type="text" label="MOD_BSJSHOP_FILTER_FIELD_APPLY_CLASS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_APPLY_CLASS_DESC" default="" showon="show_price:1[OR]show_area:1" />
+
+                <field name="reset_class" type="text" label="MOD_BSJSHOP_FILTER_FIELD_RESET_CLASS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_RESET_CLASS_DESC" default="" showon="show_price:1[OR]show_area:1" />
 
                 <field name="card_fields" type="subform" label="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELDS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_CARD_FIELDS_DESC" multiple="true" layout="joomla.form.field.subform.repeatable-table">
                     <form>

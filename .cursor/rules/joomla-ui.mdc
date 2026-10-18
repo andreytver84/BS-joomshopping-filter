@@ -1,0 +1,14 @@
+---
+description: Вёрстка панели фильтра, карточек и CSS-классов кнопок.
+globs: "{assets/css/style.css,tmpl/**/*.php}"
+alwaysApply: false
+---
+
+# Вёрстка модуля
+
+- Фон фильтра один: `.bsjf-filters`, `--bsjf-panel: #E8E3D6`, скругление `8px`, padding `1.5rem`. У `.bsjf-range` своего фона нет.
+- «Применить» — `bsjf-btn` + `apply_class`. «Сбросить» — `bsjf-btn-reset` + `reset_class`. «Показать ещё» — `bsjf-btn bsjf-more` + `more_class`.
+- Класс из params — `$safeClass` (`[A-Za-z0-9 _-]`), затем `htmlspecialchars`. Служебный класс остаётся.
+- `data-bsjf`, `data-bsjf-form`, `data-bsjf-grid`, `data-bsjf-field`, `data-bsjf-cat`, `data-bsjf-reset`, `data-bsjf-more`, `data-bsjf-toggle` не переименовывать.
+- Колонки: `--bsjf-cols`, `--bsjf-cols-md`, `--bsjf-cols-sm`.
+- Контракт: `.cursor/skills/joomla-5-6/ui.md`.

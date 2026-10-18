@@ -5,6 +5,8 @@
 | Задача | Файл | Субагент |
 |---|---|---|
 | Структура модуля, манифест, файлы | [structure.md](structure.md) | `joomla-structure` |
+| Новое поле, фильтр, карточка | [develop.md](develop.md) | `joomla-structure` |
+| Вёрстка панели, кнопок, карточек | [ui.md](ui.md) | `joomla-ui` |
 | Языковые константы ru/en | [language.md](language.md) | `joomla-lang` |
 | XSS, JEXEC, санитайз, SQL | [security.md](security.md) | `joomla-security` |
 | Версия, update.xml, релиз | [versions.md](versions.md) | `joomla-release` |
@@ -21,5 +23,5 @@
 
 - Элемент: `mod_bsjshop_filter`. Зависимость: компонент JoomShopping 5.
 - Языки: `ru-RU`, `en-GB`. Префикс ключей: `MOD_BSJSHOP_FILTER_`.
-- Совместимость: Joomla 4/5/6 (`targetplatform` `^[4-9]`).
+- Совместимость: Joomla 4/5/6. В `update.xml`: `<client>site</client>`, `targetplatform` `(4|5|6)\.`.
 - Версию держать одинаковой в манифесте, `$assetVersion`, `BsjshopFilterHelper::VERSION`, `update.xml`.

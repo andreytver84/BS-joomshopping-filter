@@ -28,6 +28,10 @@ htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 - Произвольный URL из params в `addScript`.
 - `ModuleHelper::getModuleById` как источник params в AJAX.
 
+## CSS-классы из params
+
+`moduleclass_sfx`, `apply_class`, `reset_class`, `more_class` и любой новый `*_class`: оставить `[A-Za-z0-9 _-]`, схлопнуть пробелы, в HTML через `htmlspecialchars`. Служебный класс (`bsjf-btn` и аналоги) параметром не заменять.
+
 ## Ассеты
 
 Пути только через `Uri::root(true) . '/modules/mod_bsjshop_filter/assets/...'`.

@@ -10,4 +10,4 @@ alwaysApply: false
 - Карточки рендерятся на сервере. В JS вставляй только HTML из JSON `data.html`.
 - AJAX: `com_ajax`, `module=bsjshop_filter`, `method=filter`, CSRF-токен, `module_id`.
 - Не подключай jQuery. Не патчи глобалы.
-- `moduleclass_sfx` — только `[A-Za-z0-9 _-]`.
+- `moduleclass_sfx`, `apply_class`, `reset_class`, `more_class` — только `[A-Za-z0-9 _-]` через `$safeClass`. Служебный `bsjf-*` остаётся.

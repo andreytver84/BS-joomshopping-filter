@@ -31,6 +31,11 @@
         "command": "node .cursor/hooks/stop-version-check.js",
         "timeout": 10,
         "loop_limit": 1
+      },
+      {
+        "command": "node .cursor/hooks/stop-lang-check.js",
+        "timeout": 10,
+        "loop_limit": 1
       }
     ]
   }
