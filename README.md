@@ -1,4 +1,4 @@
-# BS JoomShopping Filter — фильтр каталога для JoomShopping 5 / AJAX catalog filter for JoomShopping 5
+# Товары JoomShopping и фильтры / JoomShopping products and filters
 
 [🇷🇺 Русский](#ру-русский) | [🇬🇧 English](#en-english)
 
@@ -12,8 +12,8 @@ Site-модуль каталога с AJAX-фильтром для **JoomShoppin
 
 ### Возможности
 
-- Вкладки категорий, включая пункт «Все»
-- Диапазоны цены и площади, каждый можно скрыть
+- Вкладки категорий, цену и площадь можно скрыть по отдельности
+- Список ID товаров: модуль показывает только их
 - Карточки товара: фото, название, выбранные характеристики с префиксом и постфиксом, цена, ссылка «Подробнее»
 - Кнопка «Показать ещё»: свой текст, CSS-классы, можно отключить
 - Сколько товаров показывать за раз — в настройках модуля
@@ -28,7 +28,7 @@ Site-модуль каталога с AJAX-фильтром для **JoomShoppin
 
 1. Соберите ZIP с корнем файлов модуля (`mod_bsjshop_filter.php`, `mod_bsjshop_filter.xml`, `helper.php`, `src`, `services`, `tmpl`, `language`, `assets`).
 2. В Joomla: **Система → Установка → Расширения**.
-3. Создайте модуль «Фильтр товаров JoomShopping», укажите позицию и страницу каталога.
+3. Создайте модуль «Товары JoomShopping и фильтры», укажите позицию и страницу каталога.
 4. В настройках задайте ID характеристики площади и при необходимости список категорий.
 
 ### Использование
@@ -45,8 +45,8 @@ A site module with an AJAX catalog filter for **JoomShopping 5** on Joomla 4, 5 
 
 ### Features
 
-- Category tabs, including All
-- Price and area ranges, each can be hidden
+- Category tabs, price and area can each be hidden
+- Product ID list: the module shows only those products
 - Product cards: image, name, chosen extra fields with prefix and postfix, price, details link
 - Show more button: custom text, CSS classes, can be turned off
 - How many products load at once is set in the module
@@ -61,7 +61,7 @@ The area extra field must exist in the shop. A numeric **text** field (for examp
 
 1. Build a ZIP whose root contains the module files (`mod_bsjshop_filter.php`, `mod_bsjshop_filter.xml`, `helper.php`, `src`, `services`, `tmpl`, `language`, `assets`).
 2. In Joomla go to **System → Install → Extensions**.
-3. Create a “JoomShopping product filter” module, assign a position and the catalog page.
+3. Create a “JoomShopping products and filters” module, assign a position and the catalog page.
 4. Set the area extra field ID and optional category IDs.
 
 ---

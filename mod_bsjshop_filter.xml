@@ -7,17 +7,18 @@
     <creationDate>2026</creationDate>
     <copyright>Copyright (C) 2026 Andrey Uvikov</copyright>
     <license>GNU General Public License version 2 or later</license>
-    <version>1.4.1</version>
+    <version>1.5.0</version>
     <description><![CDATA[
         <div style="background:#f4f7f9;padding:20px;border-left:5px solid #004E82;border-radius:4px;font-family:sans-serif;margin-bottom:20px;">
-            <h2 style="margin-top:0;color:#004E82;">BS JoomShopping Filter</h2>
-            <p>AJAX-каталог товаров JoomShopping 5 для Joomla 4, 5 и 6: категории, диапазон цены и характеристика «Площадь».</p>
+            <h2 style="margin-top:0;color:#004E82;">Товары JoomShopping и фильтры</h2>
+            <p>Список товаров JoomShopping 5 для Joomla 4, 5 и 6. Категории, цену и площадь можно выключить. Можно ограничить вывод списком ID товаров.</p>
             <h3 style="color:#333;border-bottom:1px solid #ccc;padding-bottom:5px;margin-top:20px;">Настройка</h3>
             <ol>
                 <li>Опубликуйте модуль на странице каталога. Заголовок задаётся полем «Заголовок каталога».</li>
                 <li>Укажите ID родительской категории или список ID категорий для вкладок. Пустые поля — корневые опубликованные категории.</li>
                 <li>Введите ID характеристики площади (JoomShopping → Характеристики). Для диапазона лучше текстовое числовое поле.</li>
-                <li>Фильтры цены и площади можно выключить — останутся только вкладки категорий.</li>
+                <li>Категории, цену и площадь можно выключить по отдельности. Без категорий остаётся сетка товаров.</li>
+                <li>ID товаров через запятую ограничивают список. Пустое поле — все товары выбранных категорий или весь каталог, если категории выключены.</li>
                 <li>Характеристики карточки (площадь, размеры, этажи) задаются списком: ID, префикс и постфикс. В фильтре они не участвуют.</li>
                 <li>При необходимости включите префикс «от» перед ценой на карточке.</li>
             </ol>
@@ -52,14 +53,21 @@
 
                 <field name="catalog_title" type="text" label="MOD_BSJSHOP_FILTER_FIELD_TITLE_LABEL" default="MOD_BSJSHOP_FILTER_DEFAULT_TITLE" translate_default="true" showon="show_title:1" />
 
-                <field name="parent_category_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_PARENT_CAT_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_PARENT_CAT_DESC" default="0" min="0" step="1" />
-
-                <field name="category_ids" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CAT_IDS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_CAT_IDS_DESC" default="" />
-
-                <field name="show_all_tab" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_ALL_LABEL" default="1">
+                <field name="show_categories" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_CATEGORIES_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_SHOW_CATEGORIES_DESC" default="1">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
+
+                <field name="parent_category_id" type="number" label="MOD_BSJSHOP_FILTER_FIELD_PARENT_CAT_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_PARENT_CAT_DESC" default="0" min="0" step="1" showon="show_categories:1" />
+
+                <field name="category_ids" type="text" label="MOD_BSJSHOP_FILTER_FIELD_CAT_IDS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_CAT_IDS_DESC" default="" showon="show_categories:1" />
+
+                <field name="show_all_tab" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_ALL_LABEL" default="1" showon="show_categories:1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="product_ids" type="text" label="MOD_BSJSHOP_FILTER_FIELD_PRODUCT_IDS_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_PRODUCT_IDS_DESC" default="" />
 
                 <field name="show_price" type="radio" layout="joomla.form.field.radio.switcher" label="MOD_BSJSHOP_FILTER_FIELD_SHOW_PRICE_LABEL" description="MOD_BSJSHOP_FILTER_FIELD_SHOW_PRICE_DESC" default="1">
                     <option value="0">JNO</option>

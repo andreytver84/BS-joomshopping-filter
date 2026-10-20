@@ -26,7 +26,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 
-    public const VERSION = '1.4.1';
+    public const VERSION = '1.5.0';
 
     public function isShopReady(): bool
     {
@@ -135,11 +135,13 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
 
     public function getBounds(Registry $params, array $categories): array
     {
-        $categoryIds = array_map(static fn ($cat) => (int) $cat->id, $categories);
+        $categoryIds = $this->showCategories($params)
+            ? array_map(static fn ($cat) => (int) $cat->id, $categories)
+            : [];
         $areaFieldId = (int) $params->get('extra_field_area_id', 0);
 
-        $price = $this->queryPriceBounds($categoryIds);
-        $area = $this->queryAreaBounds($categoryIds, $areaFieldId);
+        $price = $this->queryPriceBounds($params, $categoryIds);
+        $area = $this->queryAreaBounds($params, $categoryIds, $areaFieldId);
 
         return [
             'priceMin'    => $price['min'],
@@ -158,13 +160,17 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         $limit = max(1, (int) $params->get('limit', 6));
         $isAjax = $input->getCmd('option') === 'com_ajax';
 
-        $categoryId = $isAjax
-            ? $input->getInt('category_id', 0)
-            : $input->getInt($prefix . 'cat', 0);
-        $allowed = array_map(static fn ($cat) => (int) $cat->id, $this->getCategories($params));
+        $categoryId = 0;
 
-        if ($categoryId !== 0 && !in_array($categoryId, $allowed, true)) {
-            $categoryId = 0;
+        if ($this->showCategories($params)) {
+            $categoryId = $isAjax
+                ? $input->getInt('category_id', 0)
+                : $input->getInt($prefix . 'cat', 0);
+            $allowed = array_map(static fn ($cat) => (int) $cat->id, $this->getCategories($params));
+
+            if ($categoryId !== 0 && !in_array($categoryId, $allowed, true)) {
+                $categoryId = 0;
+            }
         }
 
         $priceFrom = $this->toFloat($input->getString(
@@ -206,10 +212,14 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
     public function getProducts(Registry $params, array $filters): array
     {
         $db = $this->db();
-        $categories = $this->getCategories($params);
-        $tabIds = array_map(static fn ($cat) => (int) $cat->id, $categories);
-        $selectedCat = (int) $filters['category_id'];
-        $filterCats = $selectedCat > 0 ? [$selectedCat] : $tabIds;
+        $filterCats = [];
+
+        if ($this->showCategories($params)) {
+            $categories = $this->getCategories($params);
+            $tabIds = array_map(static fn ($cat) => (int) $cat->id, $categories);
+            $selectedCat = (int) $filters['category_id'];
+            $filterCats = $selectedCat > 0 ? [$selectedCat] : $tabIds;
+        }
 
         $nameCol = $this->getLangColumn('#__jshopping_products', 'name');
         $areaFieldId = (int) $params->get('extra_field_area_id', 0);
@@ -248,7 +258,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             ->where($db->quoteName('p.parent_id') . ' = 0');
 
         $this->applyProductAccess($query);
-        $this->applyCategoryFilter($query, $filterCats);
+        $this->applyListingScope($query, $params, $filterCats);
 
         if ($needEf) {
             $query->join(
@@ -475,7 +485,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         return $map;
     }
 
-    private function queryPriceBounds(array $categoryIds): array
+    private function queryPriceBounds(Registry $params, array $categoryIds): array
     {
         $db = $this->db();
         $priceExpr = $this->priceExpr();
@@ -486,7 +496,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
             ->where($db->quoteName('p.parent_id') . ' = 0');
 
         $this->applyProductAccess($query);
-        $this->applyCategoryFilter($query, $categoryIds);
+        $this->applyListingScope($query, $params, $categoryIds);
         $db->setQuery($query);
         $row = $db->loadObject();
 
@@ -500,7 +510,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         return ['min' => $min, 'max' => $max];
     }
 
-    private function queryAreaBounds(array $categoryIds, int $fieldId): array
+    private function queryAreaBounds(Registry $params, array $categoryIds, int $fieldId): array
     {
         $empty = ['min' => 0.0, 'max' => 0.0];
 
@@ -549,7 +559,7 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
                 ->where($quoted . ' != ' . $db->quote('0'));
         }
 
-        $this->applyCategoryFilter($query, $categoryIds);
+        $this->applyListingScope($query, $params, $categoryIds);
         $db->setQuery($query);
         $row = $db->loadObject();
 
@@ -561,6 +571,34 @@ class BsjshopFilterHelper implements DatabaseAwareInterface
         }
 
         return ['min' => $min, 'max' => $max];
+    }
+
+    private function showCategories(Registry $params): bool
+    {
+        return (int) $params->get('show_categories', 1) === 1;
+    }
+
+    private function applyListingScope($query, Registry $params, array $categoryIds): void
+    {
+        if ($this->showCategories($params)) {
+            $this->applyCategoryFilter($query, $categoryIds);
+        }
+
+        $raw = trim((string) $params->get('product_ids', ''));
+
+        if ($raw === '') {
+            return;
+        }
+
+        $ids = $this->parseIdList($raw);
+
+        if (!$ids) {
+            $query->where('0 = 1');
+
+            return;
+        }
+
+        $query->whereIn($this->db()->quoteName('p.product_id'), $ids, ParameterType::INTEGER);
     }
 
     private function applyCategoryFilter($query, array $categoryIds): void

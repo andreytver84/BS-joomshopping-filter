@@ -27,6 +27,7 @@ $safeClass = static function (string $value): string {
 $sfx = $safeClass((string) $params->get('moduleclass_sfx', ''));
 $showTitle = (int) $params->get('show_title', 1) === 1;
 $title = trim((string) $params->get('catalog_title', ''));
+$showCategories = (int) $params->get('show_categories', 1) === 1;
 $showAll = (int) $params->get('show_all_tab', 1) === 1;
 $showPrice = (int) $params->get('show_price', 1) === 1;
 $showArea = (int) $params->get('show_area', 1) === 1 && !empty($bounds['hasArea']);
@@ -92,7 +93,7 @@ $colsSm = max(1, min(6, (int) $params->get('cols_sm', 1)));
     <?php if (!$shopReady) : ?>
         <p class="bsjf-error"><?php echo $e(Text::_('MOD_BSJSHOP_FILTER_ERROR_NO_JSHOP')); ?></p>
     <?php else : ?>
-        <?php if ($showAll || $categories) : ?>
+        <?php if ($showCategories && ($showAll || $categories)) : ?>
             <div class="bsjf-tabs" role="tablist">
                 <?php if ($showAll) : ?>
                     <button type="button" class="bsjf-tab<?php echo $activeCat === 0 ? ' is-active' : ''; ?>" data-bsjf-cat="0">
